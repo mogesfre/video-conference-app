@@ -22,17 +22,16 @@ try {
   console.log('⚠️  SSL certificates not found, using HTTP server');
   server = http.createServer(app);
 }
-// CORS origins - support both local and production
+// CORS configuration - use CLIENT_URL from environment
+// For Railway: Set CLIENT_URL to your frontend URL (e.g., https://your-frontend.railway.app)
+const allowedOrigin = process.env.CLIENT_URL || "http://localhost:3000";
+
+// Also allow localhost for local development
 const corsOrigins = process.env.CLIENT_URL 
   ? [process.env.CLIENT_URL, "http://localhost:3000", "https://localhost:3000"]
-  : [
-      "http://localhost:3000",
-      "https://localhost:3000",
-      "https://192.168.1.199:3000",
-      "http://192.168.1.199:3000"
-    ];
+  : ["http://localhost:3000", "https://localhost:3000"];
 
-// Add production URLs if specified (comma-separated)
+// Add additional origins if specified (comma-separated)
 if (process.env.CLIENT_URLS) {
   corsOrigins.push(...process.env.CLIENT_URLS.split(','));
 }
@@ -45,9 +44,9 @@ const io = socketIo(server, {
   }
 });
 
-// Middleware
+// Middleware - use primary allowed origin
 app.use(cors({
-  origin: corsOrigins,
+  origin: allowedOrigin,
   credentials: true
 }));
 app.use(express.json());
@@ -252,6 +251,7 @@ app.post('/api/meetings', (req, res) => {
   res.json({ meetingId });
 });
 
+// Railway automatically provides PORT environment variable
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
