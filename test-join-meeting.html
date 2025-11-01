@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Join Meeting Button</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; background-color: #f4f4f4; color: #333; }
+        .container { max-width: 600px; margin: auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { color: #0056b3; }
+        .test-section { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; }
+        button { background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        button:hover { background-color: #0056b3; }
+        .result { margin-top: 10px; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test Join Meeting Button Functionality</h1>
+        
+        <div class="test-section">
+            <h2>1. Test Landing Page Access</h2>
+            <button onclick="testLandingPage()">Test Landing Page</button>
+            <div id="landing-result" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>2. Test Join Meeting URL</h2>
+            <button onclick="testJoinMeeting()">Test Join Meeting URL</button>
+            <div id="join-result" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>3. Test Camera/Microphone Access</h2>
+            <button onclick="testMediaAccess()">Test Media Access</button>
+            <div id="media-result" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>4. Test Navigation</h2>
+            <button onclick="testNavigation()">Test Navigation to Meeting</button>
+            <div id="nav-result" class="result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const serverUrl = 'http://192.168.1.199:3000';
+        const meetingId = 'TEST123';
+        const userName = 'TestUser';
+
+        async function testLandingPage() {
+            const resultDiv = document.getElementById('landing-result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = 'Testing landing page...';
+
+            try {
+                const response = await fetch(serverUrl);
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = '✅ Landing page is accessible!';
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `❌ Landing page returned status: ${response.status}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Error accessing landing page: ${error.message}`;
+            }
+        }
+
+        async function testJoinMeeting() {
+            const resultDiv = document.getElementById('join-result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = 'Testing join meeting URL...';
+
+            try {
+                const url = `${serverUrl}/meeting/${meetingId}?userName=${encodeURIComponent(userName)}&isHost=false`;
+                const response = await fetch(url);
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = `✅ Join meeting URL is accessible! URL: ${url}`;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `❌ Join meeting URL returned status: ${response.status}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Error accessing join meeting URL: ${error.message}`;
+            }
+        }
+
+        async function testMediaAccess() {
+            const resultDiv = document.getElementById('media-result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = 'Testing camera/microphone access...';
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: true, 
+                    audio: true 
+                });
+                
+                // Stop the stream immediately - we just wanted to test access
+                stream.getTracks().forEach(track => track.stop());
+                
+                resultDiv.className = 'result success';
+                resultDiv.textContent = '✅ Camera and microphone access granted!';
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Media access denied: ${error.message}`;
+            }
+        }
+
+        function testNavigation() {
+            const resultDiv = document.getElementById('nav-result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = 'Testing navigation...';
+
+            try {
+                const url = `${serverUrl}/meeting/${meetingId}?userName=${encodeURIComponent(userName)}&isHost=false`;
+                window.open(url, '_blank');
+                resultDiv.className = 'result success';
+                resultDiv.textContent = `✅ Navigation test - opened new tab with URL: ${url}`;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Navigation error: ${error.message}`;
+            }
+        }
+
+        // Auto-run tests on page load
+        window.onload = function() {
+            testLandingPage();
+            setTimeout(testJoinMeeting, 1000);
+            setTimeout(testMediaAccess, 2000);
+        };
+    </script>
+</body>
+</html>

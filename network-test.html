@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Connection Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .url {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 10px 0;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌐 Network Connection Test</h1>
+    
+    <div class="test-section">
+        <h2>📡 Test Server Connectivity</h2>
+        <p>Click the buttons below to test different server endpoints:</p>
+        
+        <button class="test-button" onclick="testConnection('http://192.168.1.199:3000', 'Port 3000')">Test Port 3000</button>
+        <button class="test-button" onclick="testConnection('http://192.168.1.199:8080', 'Port 8080')">Test Port 8080</button>
+        <button class="test-button" onclick="testConnection('http://localhost:3000', 'Localhost 3000')">Test Localhost</button>
+        
+        <div id="connection-status" class="status info">
+            Ready to test connections...
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔗 Working URLs (if server is accessible)</h2>
+        <p>If the connection test succeeds, use these URLs on your other devices:</p>
+        
+        <div class="url">
+            <strong>Landing Page:</strong><br>
+            http://192.168.1.199:3000
+        </div>
+        
+        <div class="url">
+            <strong>Host Meeting:</strong><br>
+            http://192.168.1.199:3000/meeting/TEST123?userName=Host&isHost=true
+        </div>
+        
+        <div class="url">
+            <strong>Join Meeting:</strong><br>
+            http://192.168.1.199:3000/meeting/TEST123?userName=Participant&isHost=false
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔧 Troubleshooting Steps</h2>
+        <ol>
+            <li><strong>Check WiFi Network:</strong> Ensure both devices are on the same WiFi network</li>
+            <li><strong>Check IP Address:</strong> Verify the server IP is 192.168.1.199</li>
+            <li><strong>Check Firewall:</strong> Make sure macOS firewall allows incoming connections</li>
+            <li><strong>Try Different Port:</strong> If 3000 doesn't work, try 8080 or 5000</li>
+            <li><strong>Check Router Settings:</strong> Some routers block device-to-device communication</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>📱 Device-Specific Instructions</h2>
+        <h3>iPhone/Android:</h3>
+        <ul>
+            <li>Open Safari/Chrome browser</li>
+            <li>Type the URL directly in the address bar</li>
+            <li>Allow camera/microphone permissions when prompted</li>
+        </ul>
+        
+        <h3>Laptop/Desktop:</h3>
+        <ul>
+            <li>Open any modern browser (Chrome, Firefox, Safari, Edge)</li>
+            <li>Navigate to the URL</li>
+            <li>Allow camera/microphone permissions when prompted</li>
+        </ul>
+    </div>
+
+    <script>
+        async function testConnection(url, description) {
+            const status = document.getElementById('connection-status');
+            status.textContent = `Testing ${description}...`;
+            status.className = 'status info';
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'HEAD',
+                    mode: 'no-cors'
+                });
+                
+                status.textContent = `✅ ${description} is accessible!`;
+                status.className = 'status success';
+                
+                // Also test with a full request
+                try {
+                    const fullResponse = await fetch(url);
+                    if (fullResponse.ok) {
+                        status.textContent += ` (HTTP ${fullResponse.status})`;
+                    }
+                } catch (e) {
+                    // Ignore CORS errors for the full request
+                }
+                
+            } catch (error) {
+                status.textContent = `❌ ${description} is not accessible: ${error.message}`;
+                status.className = 'status error';
+            }
+        }
+        
+        // Auto-test on page load
+        window.onload = function() {
+            testConnection('http://192.168.1.199:3000', 'Port 3000');
+        };
+    </script>
+</body>
+</html>

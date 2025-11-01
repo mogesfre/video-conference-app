@@ -1,0 +1,33 @@
+services:
+  # Backend Server (Socket.io + Express)
+  - type: web
+    name: video-conference-backend
+    env: node
+    plan: free
+    buildCommand: cd server && npm install
+    startCommand: cd server && node index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: CLIENT_URL
+        value: https://video-conference-frontend.onrender.com
+    healthCheckPath: /api/meetings
+
+  # Frontend (Next.js)
+  - type: web
+    name: video-conference-frontend
+    env: node
+    plan: free
+    buildCommand: cd client-nextjs && npm install && npm run build
+    startCommand: cd client-nextjs && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_SERVER_URL
+        fromService:
+          type: web
+          name: video-conference-backend
+          property: host
+

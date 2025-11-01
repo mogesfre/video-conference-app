@@ -22,20 +22,34 @@ try {
   console.log('⚠️  SSL certificates not found, using HTTP server');
   server = http.createServer(app);
 }
-const io = socketIo(server, {
-  cors: {
-    origin: [
-      process.env.CLIENT_URL || "http://localhost:3000",
+// CORS origins - support both local and production
+const corsOrigins = process.env.CLIENT_URL 
+  ? [process.env.CLIENT_URL, "http://localhost:3000", "https://localhost:3000"]
+  : [
+      "http://localhost:3000",
       "https://localhost:3000",
       "https://192.168.1.199:3000",
       "http://192.168.1.199:3000"
-    ],
-    methods: ["GET", "POST"]
+    ];
+
+// Add production URLs if specified (comma-separated)
+if (process.env.CLIENT_URLS) {
+  corsOrigins.push(...process.env.CLIENT_URLS.split(','));
+}
+
+const io = socketIo(server, {
+  cors: {
+    origin: corsOrigins,
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: corsOrigins,
+  credentials: true
+}));
 app.use(express.json());
 
 // Store active meetings and participants

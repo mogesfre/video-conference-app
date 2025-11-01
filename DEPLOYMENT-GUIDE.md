@@ -1,18 +1,30 @@
 # 🚀 Video Conference App - Cloud Deployment Guide
 
+## 🎯 **Quick Start - Recommended Deployment**
+
+**👉 For Railway deployment, see [`RAILWAY-DEPLOYMENT.md`](./RAILWAY-DEPLOYMENT.md) - Complete step-by-step guide**
+
+**👉 For Render (free tier), see [`RENDER-DEPLOYMENT.md`](./RENDER-DEPLOYMENT.md) - Step-by-step guide**
+
+**👉 For Firebase Hosting (frontend only), see [`FIREBASE-DEPLOYMENT.md`](./FIREBASE-DEPLOYMENT.md)**
+
+---
+
 ## 🌐 **Best Cloud Services for WebSocket Support**
 
-### **1. Railway (Recommended) ⭐**
+### **1. Railway ⭐⭐⭐ (RECOMMENDED)**
 - **WebSocket Support**: ✅ Full support
-- **Pricing**: Free tier available, then $5/month
+- **Pricing**: $5 credit/month free, then $5/month
 - **Deployment**: Very easy with GitHub integration
 - **Best for**: Full-stack applications with real-time features
+- **📖 Full Guide**: See [`RAILWAY-DEPLOYMENT.md`](./RAILWAY-DEPLOYMENT.md)
 
-### **2. Render**
+### **2. Render ⭐⭐**
 - **WebSocket Support**: ✅ Full support
 - **Pricing**: Free tier available, then $7/month
 - **Deployment**: Easy with GitHub integration
 - **Best for**: Node.js applications with WebSockets
+- **📖 Full Guide**: See [`RENDER-DEPLOYMENT.md`](./RENDER-DEPLOYMENT.md)
 
 ### **3. Heroku**
 - **WebSocket Support**: ✅ Full support
@@ -34,59 +46,19 @@
 
 ---
 
-## 🚀 **Railway Deployment (Recommended)**
+## 🚀 **Railway Deployment**
 
-### **Step 1: Prepare Your Repository**
-```bash
-# Initialize git if not already done
-git init
-git add .
-git commit -m "Initial commit"
+**👉 See the complete guide: [`RAILWAY-DEPLOYMENT.md`](./RAILWAY-DEPLOYMENT.md)**
 
-# Push to GitHub
-git remote add origin https://github.com/yourusername/video-conference-app.git
-git push -u origin main
-```
+### Quick Overview:
+1. Push code to GitHub
+2. Create Railway project and deploy backend service
+3. Deploy frontend service in same project
+4. Configure environment variables
+5. Generate public domains
+6. Test your deployment
 
-### **Step 2: Deploy to Railway**
-
-#### **Option A: Using Railway CLI**
-```bash
-# Install Railway CLI
-npm install -g @railway/cli
-
-# Login to Railway
-railway login
-
-# Deploy from current directory
-railway up
-
-# Follow the prompts:
-# - Connect to GitHub? Yes
-# - Select repository: yourusername/video-conference-app
-# - Deploy? Yes
-```
-
-#### **Option B: Using Railway Dashboard**
-1. Go to [railway.app](https://railway.app)
-2. Sign up with GitHub
-3. Click "New Project"
-4. Select "Deploy from GitHub repo"
-5. Choose your repository
-6. Railway will automatically detect and deploy
-
-### **Step 3: Configure Environment Variables**
-In Railway dashboard, add these environment variables:
-```
-NODE_ENV=production
-PORT=3000
-SERVER_PORT=5001
-```
-
-### **Step 4: Get Your Public URL**
-Railway will provide you with URLs like:
-- **Frontend**: `https://your-app.railway.app`
-- **Backend**: `https://your-app-backend.railway.app`
+**For detailed instructions, see [`RAILWAY-DEPLOYMENT.md`](./RAILWAY-DEPLOYMENT.md)**
 
 ---
 

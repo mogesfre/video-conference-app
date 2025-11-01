@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Conference Functionality Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>🎥 Video Conference Functionality Test</h1>
+    
+    <div class="test-section">
+        <h2>📱 Test URLs</h2>
+        <p>Click the buttons below to test different scenarios:</p>
+        
+        <button class="test-button" onclick="openMeeting('Host')">Test as Host</button>
+        <button class="test-button" onclick="openMeeting('Participant')">Test as Participant</button>
+        <button class="test-button" onclick="openLanding()">Test Landing Page</button>
+        
+        <div id="status" class="status info">
+            Ready to test! Click a button above to open the application.
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>✅ Functionality Checklist</h2>
+        <ul>
+            <li><strong>Video Feed:</strong> Your camera should be visible</li>
+            <li><strong>Audio Controls:</strong> Mute/unmute button should work</li>
+            <li><strong>Video Controls:</strong> Turn video on/off should work</li>
+            <li><strong>Chat Panel:</strong> Click chat button to open/close chat</li>
+            <li><strong>Participants Panel:</strong> Click participants button to see member list</li>
+            <li><strong>Chat Messages:</strong> Type and send messages in chat</li>
+            <li><strong>Screen Share:</strong> Test screen sharing functionality</li>
+            <li><strong>Leave Meeting:</strong> Leave button should return to landing page</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🔧 Troubleshooting</h2>
+        <ul>
+            <li><strong>Camera Permission:</strong> Allow camera/microphone when prompted</li>
+            <li><strong>HTTPS Required:</strong> Use https://localhost:3000 for camera access</li>
+            <li><strong>Browser Compatibility:</strong> Use Chrome, Firefox, or Safari</li>
+            <li><strong>Network Issues:</strong> Check if localhost:3000 is accessible</li>
+        </ul>
+    </div>
+
+    <script>
+        function openMeeting(role) {
+            const isHost = role === 'Host';
+            const userName = role;
+            const meetingId = 'TEST123';
+            const url = `http://localhost:3000/meeting/${meetingId}?userName=${userName}&isHost=${isHost}`;
+            
+            updateStatus(`Opening ${role} view...`, 'info');
+            window.open(url, '_blank');
+        }
+        
+        function openLanding() {
+            updateStatus('Opening landing page...', 'info');
+            window.open('http://localhost:3000', '_blank');
+        }
+        
+        function updateStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+        }
+        
+        // Test server connectivity
+        fetch('http://localhost:3000')
+            .then(response => {
+                if (response.ok) {
+                    updateStatus('✅ Server is running and accessible', 'success');
+                } else {
+                    updateStatus('❌ Server responded with error', 'error');
+                }
+            })
+            .catch(error => {
+                updateStatus('❌ Cannot connect to server. Make sure it\'s running on localhost:3000', 'error');
+            });
+    </script>
+</body>
+</html>
